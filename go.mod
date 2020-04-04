@@ -1,4 +1,4 @@
-module github.com/TheCactusBlue/ecchi
+module github.com/thecactusblue/ecchi
 
 go 1.14
 
