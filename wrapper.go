@@ -1,5 +1,14 @@
 package ecchi
 
+import "github.com/go-chi/chi"
+
+// Route creates sub-routes.
+func (r *Router) Route(route string, c func(*Router)) {
+	r.Router.Route(route, func(r chi.Router) {
+		c(&Router{chi.NewRouter()})
+	})
+}
+
 // Connect is a wrapper method.
 func (r *Router) Connect(route string, hf Handler) {
 	r.Router.Connect(route, Wrap(hf))
