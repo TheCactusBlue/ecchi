@@ -2,10 +2,10 @@ package ecchi
 
 import "github.com/go-chi/chi"
 
-// Route creates sub-routes.
+// Route creates subroutes.
 func (r *Router) Route(route string, c func(*Router)) {
 	r.Router.Route(route, func(r chi.Router) {
-		c(&Router{chi.NewRouter()})
+		c(&Router{r})
 	})
 }
 
