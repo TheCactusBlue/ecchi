@@ -37,6 +37,11 @@ func (c *Ctx) Code(code int) *Ctx {
 	return c
 }
 
+// URLParam gets URL param
+func (c *Ctx) URLParam(key string) string {
+	return chi.URLParam(c.R, key)
+}
+
 // JSON writes a JSON response.
 func (c *Ctx) JSON(v interface{}) *Ctx {
 	c.W.Header().Set("Content-Type", "application/json")
