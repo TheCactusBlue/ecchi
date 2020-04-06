@@ -9,19 +9,32 @@ type RestError struct {
 	Code    int    `json:"code"`
 }
 
-// ErrorJSON returns a JSON, as error.
-func (c *Ctx) ErrorJSON(r *RestError) *Ctx {
-	return c.JSON(r).Code(r.Code)
+var _ error = (*RestError)(nil)
+
+func (r *RestError) Error() string {
+	return r.Message
 }
 
-// ServerError is for unexpected server errors.
-func (c *Ctx) ServerError(e error) *Ctx {
-	c.JSON(RestError{
+// NewError creates a new error.
+func NewError(name string, code int, message string) *RestError {
+	return &RestError{
+		Name:    name,
+		Message: message,
+		Code:    code,
+	}
+}
+
+// ErrorJSON returns a JSON, as error.
+func (c *Ctx) ErrorJSON(r error) *Ctx {
+	v, ok := r.(*RestError)
+	if ok {
+		return c.Code(v.Code).JSON(v)
+	}
+	return c.Code(500).JSON(RestError{
 		Name:    "ServerFailure",
-		Message: e.Error(),
+		Message: r.Error(),
 		Code:    500,
 	})
-	return c
 }
 
 var marshalErr, _ = json.Marshal(RestError{

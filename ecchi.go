@@ -5,7 +5,10 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/go-playground/validator/v10"
 )
+
+var validate *validator.Validate = validator.New()
 
 var _ http.Handler = (*Router)(nil)
 
@@ -26,6 +29,11 @@ func (c *Ctx) ReadJSON(dst interface{}) error {
 	err := dec.Decode(&dst)
 	if err != nil {
 		return err
+	}
+
+	err = validate.Struct(dst)
+	if err != nil {
+		return NewError("ValidationFailed", 400, err.Error())
 	}
 
 	return nil
